@@ -12,7 +12,7 @@ private:
   uint8_t color;
   uint8_t brightness;
 
-  uint8_t configBrightness;
+  uint8_t currentBrightness;
   
 public:
 
@@ -25,28 +25,48 @@ public:
   {
     strip = inStrip;
     numPixels = inNumPixels;
+    
+    currentBrightness = 0;
   }
 
   void doAction()
   {
-    if(brightness > configBrightness) 
+    if(currentBrightness > brightness) 
     {
-      brightness--;
+      currentBrightness--;
     }
-    else if(brightness < configBrightness) 
+    else if(currentBrightness < brightness) 
     {
-      brightness++;
+      currentBrightness++;
     }
     setLeds();
   }
 
   void setLeds()
   {
+    uint16_t tmpBrightness = currentBrightness;
+    
     for(uint8_t i=0; i<numPixels; i++)
     {
-      uint8_t r = ((color >> 0) & 1) * brightness;  // bit 0
-      uint8_t g = ((color >> 1) & 1) * brightness;  // bit 1
-      uint8_t b = ((color >> 2) & 1) * brightness;  // bit 2 
+      uint8_t r = 0;
+      uint8_t g = 0;
+      uint8_t b = 0;
+      
+      uint8_t bVal = 0;
+      if(tmpBrightness > 20) 
+      {
+        bVal = 20;
+        tmpBrightness -= 20;
+      }
+      else 
+      {
+        bVal = tmpBrightness;
+        tmpBrightness = 0;
+      }
+        
+      r = ((color >> 0) & 1) * bVal * 10;  // bit 0
+      g = ((color >> 1) & 1) * bVal * 10;  // bit 1
+      b = ((color >> 2) & 1) * bVal * 10;  // bit 2 
       
       strip->setPixelColor(i, r, g, b); 
     }
@@ -60,7 +80,7 @@ public:
  
   void setBrightness( uint8_t inBrightness )
   {
-    configBrightness = inBrightness;
+    brightness = inBrightness;
   }
 
   void setNumPixels( uint8_t inNumPixels )
@@ -68,6 +88,5 @@ public:
     numPixels = inNumPixels; 
   }
 };
-
 
 #endif

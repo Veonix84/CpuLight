@@ -24,7 +24,7 @@ void setup()
   ledModes.setMode( LedModes::MODE_POWER_LEVEL );
   ledModes.setNumPixels( MAX_NUM_PIXELS );
   ledModes.setAutomode( 0 );
-  ledModes.setSpeed( 100 );
+  ledModes.setSpeed( 50 );
   ledModes.setBrightness( 200 );
 
   ledModes.setColor( LedModes::COLOR_RED );
